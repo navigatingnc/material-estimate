@@ -1,1 +1,1 @@
-
+## npm install --legacy-peer-deps fixes empty bin folder and vite install fail - manus
