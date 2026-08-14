@@ -1,0 +1,36 @@
+name: Quality checks
+
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Lint, test, and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint source
+        run: pnpm lint
+      - name: Run calculation tests
+        run: node --test src/lib/estimate.test.mjs
+      - name: Build production bundle
+        run: pnpm build
